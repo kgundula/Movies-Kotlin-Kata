@@ -2,17 +2,16 @@ package com.xurxodev.movieskotlinkata.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.xurxodev.moviesandroidkotlin.R
-import com.xurxodev.moviesandroidkotlin.R.id.movies_title_text_view
 import com.xurxodev.movieskotlinkata.data.FakeMovieRepository
 import com.xurxodev.movieskotlinkata.model.Movie
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,21 +41,21 @@ class MainActivity : AppCompatActivity() {
     private fun loadMovies() {
         loadingMovies()
 
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             val movies = asyncLoadMovies().await()
 
             loadedMovies(movies)
         }
     }
 
-    private fun asyncLoadMovies() = async(CommonPool) {
+    private fun asyncLoadMovies() = GlobalScope.async {
         FakeMovieRepository(this@MainActivity).getAll()
     }
 
     private fun loadingMovies() {
-        itemAdapter.clearMovies();
+        itemAdapter.clearMovies()
         pb_loading.visibility = View.VISIBLE
-        movies_title_text_view.text =getString(R.string.loading_movies_text);
+        movies_title_text_view.text =getString(R.string.loading_movies_text)
     }
 
     private fun loadedMovies(movies: List<Movie>) {

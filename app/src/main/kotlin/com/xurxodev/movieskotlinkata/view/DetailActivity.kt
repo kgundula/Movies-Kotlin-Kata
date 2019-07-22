@@ -1,16 +1,16 @@
 package com.xurxodev.movieskotlinkata.view
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.xurxodev.moviesandroidkotlin.R
 import com.xurxodev.movieskotlinkata.data.FakeMovieRepository
 import com.xurxodev.movieskotlinkata.model.Movie
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class DetailActivity : AppCompatActivity() {
 
@@ -31,14 +31,14 @@ class DetailActivity : AppCompatActivity() {
     private fun loadMovie(id: Long) {
         loadingMovie()
 
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             val movies = asyncLoadMovies(id).await()
 
             loadedMovie(movies)
         }
     }
 
-    private fun asyncLoadMovies(id: Long) = async(CommonPool) {
+    private fun asyncLoadMovies(id: Long) = GlobalScope.async {
         FakeMovieRepository(this@DetailActivity).getById(id)
     }
 

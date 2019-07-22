@@ -1,8 +1,8 @@
 package com.xurxodev.movieskotlinkata.view
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.xurxodev.moviesandroidkotlin.R
 import com.xurxodev.movieskotlinkata.model.Movie
 import kotlinx.android.synthetic.main.view_item.view.*
