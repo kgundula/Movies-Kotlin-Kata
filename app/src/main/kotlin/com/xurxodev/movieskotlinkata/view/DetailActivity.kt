@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.xurxodev.moviesandroidkotlin.R
-import com.xurxodev.movieskotlinkata.data.FakeMovieRepository
+import com.xurxodev.movieskotlinkata.MoviesKotlinKataApp
+import com.xurxodev.movieskotlinkata.data.MovieRepository
 import com.xurxodev.movieskotlinkata.model.Movie
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,10 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         val EXTRA_ID = "DetailActivity:id"
+    }
+
+    private val movieRepository: MovieRepository by lazy {
+        ((application as MoviesKotlinKataApp).feather.instance(MovieRepository::class.java))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +44,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun asyncLoadMovies(id: Long) = GlobalScope.async {
-        FakeMovieRepository(this@DetailActivity).getById(id)
+        movieRepository.getById(id)
     }
 
     private fun loadingMovie() {

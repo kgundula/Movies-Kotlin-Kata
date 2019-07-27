@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.xurxodev.moviesandroidkotlin.R
-import com.xurxodev.movieskotlinkata.data.FakeMovieRepository
+import com.xurxodev.movieskotlinkata.MoviesKotlinKataApp
+import com.xurxodev.movieskotlinkata.data.MovieRepository
 import com.xurxodev.movieskotlinkata.model.Movie
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,10 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     lateinit var itemAdapter: ItemAdapter
+
+    private val movieRepository: MovieRepository by lazy {
+        ((application as MoviesKotlinKataApp).feather.instance(MovieRepository::class.java))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,13 +54,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun asyncLoadMovies() = GlobalScope.async {
-        FakeMovieRepository(this@MainActivity).getAll()
+        movieRepository.getAll()
     }
 
     private fun loadingMovies() {
         itemAdapter.clearMovies()
         pb_loading.visibility = View.VISIBLE
-        movies_title_text_view.text =getString(R.string.loading_movies_text)
+        movies_title_text_view.text = getString(R.string.loading_movies_text)
     }
 
     private fun loadedMovies(movies: List<Movie>) {
